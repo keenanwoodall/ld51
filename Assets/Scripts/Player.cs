@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public float stopResponse = 10f;
     public float turnResponse = 50f;
     public Rigidbody rb;
+    public PlayerInput input;
     [Space] 
     public Transform rig;
 
@@ -20,11 +21,8 @@ public class Player : MonoBehaviour
     public float bob = 0.1f;
     public float squash = 0.1f;
 
+    public float CurrentSpeed => rb.velocity.magnitude;
 
-    private bool _walking;
-    private Vector3 _targetDirection;
-    private Quaternion _targetRotation = Quaternion.identity;
-    private float _currentSpeed;
     private Vector3 _previousVelocity;
 
     private float _cycle;
@@ -33,34 +31,22 @@ public class Player : MonoBehaviour
     {
         Instance = this;
     }
-
-    private void Update()
-    {
-        var input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-        _targetDirection = Vector3.ClampMagnitude(input, 1f);
-        _walking = _targetDirection.sqrMagnitude > 0f;
-    }
-
     private void FixedUpdate()
     {
-        if (_walking)
-            _targetRotation = Quaternion.LookRotation(_targetDirection);
-        rb.rotation = Quaternion.Slerp(rb.rotation, _targetRotation, turnResponse * Time.fixedDeltaTime);
+        var targetRotation = rb.rotation;
+        if (input.LookDirection.sqrMagnitude > 0f)
+            targetRotation = Quaternion.LookRotation(input.LookDirection);
+        rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnResponse * Time.fixedDeltaTime);
 
-        var targetSpeed = _walking ? walkSpeed : 0f;
-        var response = _walking ? walkResponse : stopResponse;
+        var targetVelocity = input.Movement * walkSpeed;
+        var response = input.Walking ? walkResponse : stopResponse;
+        rb.velocity = Vector3.Lerp(rb.velocity, targetVelocity, response * Time.fixedDeltaTime);
         
-        _currentSpeed = Mathf.Lerp(_currentSpeed, targetSpeed, response * Time.fixedDeltaTime);
-
-        var velocity = transform.forward * _currentSpeed;
-
-        rb.velocity = velocity;
-        
-        _cycle += Time.deltaTime * cycleSpeed * _currentSpeed;
+        _cycle += Time.deltaTime * cycleSpeed * CurrentSpeed;
 
         UpdateRig();
         
-        _previousVelocity = velocity;
+        _previousVelocity = rb.velocity;
     }
 
     private void UpdateRig()
@@ -77,13 +63,13 @@ public class Player : MonoBehaviour
         );
         
         // sway
-        rig.localRotation *= Quaternion.Euler(0f, 0f, Mathf.Sin(_cycle) * sway * _currentSpeed / walkSpeed);
+        rig.localRotation *= Quaternion.Euler(0f, 0f, Mathf.Sin(_cycle) * sway * CurrentSpeed / walkSpeed);
         
         // bob
-        rig.localPosition = Vector3.up * (Mathf.Max(Mathf.Sin(_cycle * 2f), 0f) * bob * _currentSpeed) / walkSpeed;
+        rig.localPosition = Vector3.up * (Mathf.Max(Mathf.Sin(_cycle * 2f), 0f) * bob * CurrentSpeed) / walkSpeed;
         
         // squash
-        var s = Mathf.Sin(_cycle * 2f) * _currentSpeed / walkSpeed * squash;
+        var s = Mathf.Sin(_cycle * 2f) * CurrentSpeed / walkSpeed * squash;
             rig.localScale = new Vector3(1f / (1f + s), 1f + s, 1f / (1f + s));
     }
 }
