@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
@@ -11,6 +12,9 @@ public class Player : MonoBehaviour
     public float turnResponse = 50f;
     public Rigidbody rb;
     public PlayerInput input;
+    [Space]
+    public Transform swordContainer;
+    public LayerMask swordLayer;
     [Space] 
     public Transform rig;
 
@@ -30,13 +34,17 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        input.PickupSword += OnPickupSwordInput;
+        input.DropSword += OnDropSwordInput;
     }
+
     private void FixedUpdate()
     {
         var targetRotation = rb.rotation;
-        if (input.LookDirection.sqrMagnitude > 0f)
-            targetRotation = Quaternion.LookRotation(input.LookDirection);
-        rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnResponse * Time.fixedDeltaTime);
+        if (input.AimDirection.sqrMagnitude > 0f)
+            targetRotation = Quaternion.LookRotation(input.AimDirection);
+        //rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnResponse * Time.fixedDeltaTime);
+        rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, turnResponse * Time.fixedDeltaTime));
 
         var targetVelocity = input.Movement * walkSpeed;
         var response = input.Walking ? walkResponse : stopResponse;
@@ -71,5 +79,34 @@ public class Player : MonoBehaviour
         // squash
         var s = Mathf.Sin(_cycle * 2f) * CurrentSpeed / walkSpeed * squash;
             rig.localScale = new Vector3(1f / (1f + s), 1f + s, 1f / (1f + s));
+    }
+
+    private bool _canPickUpSword;
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Sword"))
+        {
+            _canPickUpSword = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Sword"))
+        {
+            _canPickUpSword = false;
+        }
+    }
+    
+    private void OnDropSwordInput()
+    {
+        Sword.Instance.Drop();
+    }
+
+    private void OnPickupSwordInput()
+    {
+        if (_canPickUpSword)
+        {
+            Sword.Instance.Pickup(swordContainer);
+        }
     }
 }
