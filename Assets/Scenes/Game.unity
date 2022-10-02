@@ -161,7 +161,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh52198
+  m_Name: pb_Mesh121214
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7072,7 +7072,7 @@ MonoBehaviour:
   Movement: {x: 0, y: 0, z: 0}
   LookDirection: {x: 0, y: 0, z: 0}
   pursueDistance: 4
-  circleSpeed: 0.5
+  circleSpeed: 0.8
 --- !u!114 &759284044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7085,7 +7085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd03e30984a4f8442b4174bfb7e495cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 4
+  walkSpeed: 5
   walkResponse: 7
   stopResponse: 3
   turnResponse: 4
@@ -7098,6 +7098,8 @@ MonoBehaviour:
   bob: 0.1
   squash: 0.2
   enemyInput: {fileID: 759284043}
+  knockbackForce: 7
+  knockbackRecoverySpeed: 2
 --- !u!1 &782344293
 GameObject:
   m_ObjectHideFlags: 0
@@ -7645,7 +7647,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh52218
+  m_Name: pb_Mesh121234
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

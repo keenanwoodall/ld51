@@ -33,10 +33,11 @@ public class Sword : MonoBehaviour
     
     private SwordState _state = SwordState.Stuck;
     private bool _heldBefore;
-    
+
+    private ISwordTarget _currentSwordTarget;
     private float _currentThrowSpeed;
     private Vector3 _throwDirection;
-    
+
     private void Awake()
     {
         Instance = this;
@@ -58,20 +59,22 @@ public class Sword : MonoBehaviour
         {
             StopCoroutine(_stuckRoutine);
         }
-        
+
         _heldBefore = true;
-        if (_state == SwordState.Held && holder == transform.parent)
+        if (_state == SwordState.Held)
             return;
-        
+
         _state = SwordState.Held;
         
         rb.isKinematic = true;
-        rb.detectCollisions = false;
         
         rb.constraints = RigidbodyConstraints.FreezeAll;
         transform.SetParent(holder);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        
+        if (_currentSwordTarget != null)
+            _currentSwordTarget.OnRelease(this);
     }
     
     public void Drop()
@@ -118,6 +121,7 @@ public class Sword : MonoBehaviour
             }
 
             var contact = collision.GetContact(0);
+
             if (collision.gameObject.layer == enemyLayer)
             {
                 var enemyRB = collision.transform.GetComponentInParent<Rigidbody>();
@@ -136,6 +140,9 @@ public class Sword : MonoBehaviour
                 transform.position =
                     contact.point + contact.normal * (wobbleRoot.position - transform.position).magnitude;
             }
+            
+            _currentSwordTarget = collision.gameObject.GetComponentInParent<ISwordTarget>();
+            _currentSwordTarget?.OnStuck(this);
 
             if (_stuckRoutine != null)
                 StopCoroutine(_stuckRoutine);

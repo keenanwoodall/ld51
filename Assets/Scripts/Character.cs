@@ -23,7 +23,7 @@ public abstract class Character : MonoBehaviour
     private Vector3 _previousVelocity;
     private float _cycle;
     
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         var targetRotation = rb.rotation;
         if (CharacterInput.LookDirection.sqrMagnitude > 0f)
