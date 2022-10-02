@@ -100,7 +100,7 @@ public class Lightning : MonoBehaviour
                 enemy.Kill();
         }
 
-        if (Sword.Instance.State == Sword.SwordState.Holding)
+        if (Sword.Instance.transform.GetComponentInParent<Player>() != null)
         {
             Sword.Instance.Drop();
             Player.Instance.Kill();

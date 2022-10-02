@@ -64,7 +64,7 @@ public class Sword : MonoBehaviour
     private IEnumerator PickupRoutine(Transform holder)
     {
         State = SwordState.Holding;
-        rb.detectCollisions = false;
+        rb.detectCollisions = true;
 
         rb.isKinematic = true;
         

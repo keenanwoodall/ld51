@@ -98,6 +98,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
         if (_killRoutine != null)
             return;
         _killRoutine = StartCoroutine(KillRoutine());
+        slingshot.StopAllCoroutines();
         if (Sword.Instance.CurrentSwordTarget == this)
         {
             Sword.Instance.Drop();
