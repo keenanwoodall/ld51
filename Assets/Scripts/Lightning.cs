@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -91,7 +92,14 @@ public class Lightning : MonoBehaviour
             _gradient.alphaKeys = alphaKeys;
             lineRenderer.colorGradient = _gradient;
         });
-        
+
+        var hits = Physics.SphereCastAll(target, 1f, Vector3.forward, 0f);
+        foreach (var enemy in hits.Select(h => h.transform.GetComponent<EnemyControl>()))
+        {
+            if (enemy)
+                enemy.Kill();
+        }
+
         // flash
         yield return Tween(flashDuration, t =>
         {

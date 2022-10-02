@@ -7,6 +7,7 @@ public class Player : CharacterMotor
 
     public Transform swordContainer;
     public PlayerInput playerInput;
+    public float minThrowAngle = 20f;
 
     public override CharacterControl CharacterInput => playerInput;
     
@@ -19,7 +20,12 @@ public class Player : CharacterMotor
     
     private void OnDropSwordInput()
     {
-        Sword.Instance.Drop();
+        var throwDirection = playerInput.LookDirection;
+        var throwAngle = Vector3.Angle(transform.forward, throwDirection);
+        if (throwAngle < minThrowAngle)
+            Sword.Instance.Drop();
+        else
+            Sword.Instance.Throw(playerInput.LookDirection, Mathf.InverseLerp(minThrowAngle, 180f, throwAngle));
     }
 
     private void OnPickupSwordInput()

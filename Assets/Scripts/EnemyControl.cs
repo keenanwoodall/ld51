@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class EnemyControl : CharacterControl, ISwordTarget
 {
@@ -12,7 +13,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
     public GameObject top, bottom;
 
     public UnityEvent onStuck;
-    public UnityEvent onRelease;
+    [FormerlySerializedAs("onRelease")]
+    public UnityEvent onKill;
     
     private Vector3 _knockbackVelocity;
     private bool _stuck;
@@ -62,7 +64,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
     public void OnRelease(Sword sword)
     {
-        onRelease?.Invoke();
+        onKill?.Invoke();
         Kill();
     }
 
@@ -72,6 +74,10 @@ public class EnemyControl : CharacterControl, ISwordTarget
         if (_killRoutine != null)
             return;
         _killRoutine = StartCoroutine(KillRoutine());
+        if (Sword.Instance.CurrentSwordTarget == this)
+        {
+            Sword.Instance.Drop();
+        }
     }
 
     private IEnumerator KillRoutine()
