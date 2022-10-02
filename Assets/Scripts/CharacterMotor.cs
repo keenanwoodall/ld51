@@ -40,7 +40,7 @@ public abstract class CharacterMotor : MonoBehaviour
     
     private void UpdateRig()
     {
-        _cycle += Time.deltaTime * cycleSpeed * CharacterInput.Movement.magnitude;
+        _cycle += Time.deltaTime * cycleSpeed * CurrentSpeed;
         
         var acceleration = (rb.velocity - _previousVelocity) / Time.deltaTime;
         var axis = Vector3.Cross(acceleration, Vector3.up);
