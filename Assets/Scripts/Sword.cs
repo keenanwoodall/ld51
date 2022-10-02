@@ -33,7 +33,7 @@ public class Sword : MonoBehaviour
 
     private bool _thrown;
     
-    private SwordState _state;
+    private SwordState _state = SwordState.Stuck;
     private bool _heldBefore;
     
     private float _currentThrowSpeed;
