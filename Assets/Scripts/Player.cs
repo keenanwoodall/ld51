@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
-public class Player : Character
+public class Player : CharacterMotor
 {
     public static Player Instance;
 

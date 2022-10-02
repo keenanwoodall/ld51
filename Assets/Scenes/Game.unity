@@ -7073,6 +7073,8 @@ MonoBehaviour:
   LookDirection: {x: 0, y: 0, z: 0}
   pursueDistance: 4
   circleSpeed: 0.8
+  knockbackRecoverySpeed: 5
+  knockbackForce: 3
 --- !u!114 &759284044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7098,8 +7100,6 @@ MonoBehaviour:
   bob: 0.1
   squash: 0.2
   enemyInput: {fileID: 759284043}
-  knockbackForce: 7
-  knockbackRecoverySpeed: 2
 --- !u!1 &782344293
 GameObject:
   m_ObjectHideFlags: 0

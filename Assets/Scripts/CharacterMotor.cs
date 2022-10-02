@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Character : MonoBehaviour
+public abstract class CharacterMotor : MonoBehaviour
 {
     public float walkSpeed = 5f;
     public float walkResponse = 20f;

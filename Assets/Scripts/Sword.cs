@@ -72,9 +72,12 @@ public class Sword : MonoBehaviour
         transform.SetParent(holder);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-        
+
         if (_currentSwordTarget != null)
+        {
             _currentSwordTarget.OnRelease(this);
+            _currentSwordTarget = null;
+        }
     }
     
     public void Drop()

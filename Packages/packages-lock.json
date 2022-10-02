@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.beans.mpo": {
+      "version": "https://github.com/keenanwoodall/Material-Property-Overrides.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "3a3c037d169700fb45f0982cb4dc76b33ddd162f"
+    },
     "com.unity.animation.rigging": {
       "version": "1.1.1",
       "depth": 0,
