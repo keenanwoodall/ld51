@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,8 +9,10 @@ public class EnemyControl : CharacterControl, ISwordTarget
     public float circleSpeed = 0.5f;
     public float knockbackRecoverySpeed = 3f;
     public float knockbackForce = 5f;
+    public GameObject top, bottom;
 
     public UnityEvent onStuck;
+    public UnityEvent onRelease;
     
     private Vector3 _knockbackVelocity;
     private bool _stuck;
@@ -59,6 +62,42 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
     public void OnRelease(Sword sword)
     {
+        onRelease?.Invoke();
+        Kill();
+    }
+
+    private Coroutine _killRoutine;
+    public void Kill()
+    {
+        if (_killRoutine != null)
+            return;
+        _killRoutine = StartCoroutine(KillRoutine());
+    }
+
+    private IEnumerator KillRoutine()
+    {
+        Destroy(GetComponent<EnemyMotor>());
+
+        top.transform.SetParent(null);
+        top.GetComponent<Rigidbody>().isKinematic = false;
+        top.GetComponent<Collider>().enabled = true;
+        
+        bottom.transform.SetParent(null);
+        bottom.GetComponent<Rigidbody>().isKinematic = false;
+        bottom.GetComponent<Collider>().enabled = true;
+        
+        yield return new WaitForSeconds(5f);
+
+        while (transform.localScale.sqrMagnitude > 0.1)
+        {
+            yield return null;
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, 2f * Time.deltaTime);
+            top.transform.localScale = Vector3.Lerp(top.transform.localScale, Vector3.zero, 2f * Time.deltaTime);
+            bottom.transform.localScale = Vector3.Lerp(bottom.transform.localScale, Vector3.zero, 2f * Time.deltaTime);
+        }
+
+        Destroy(top.gameObject);
+        Destroy(bottom.gameObject);
         Destroy(gameObject);
     }
 }
