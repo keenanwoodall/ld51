@@ -8,7 +8,7 @@ public class Player : CharacterMotor
     public Transform swordContainer;
     public PlayerInput playerInput;
 
-    public override CharacterInput CharacterInput => playerInput;
+    public override CharacterControl CharacterInput => playerInput;
     
     private void Awake()
     {

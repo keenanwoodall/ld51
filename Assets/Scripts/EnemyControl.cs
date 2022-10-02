@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class EnemyInput : CharacterInput, ISwordTarget
+public class EnemyControl : CharacterControl, ISwordTarget
 {
     public float pursueDistance = 4f;
     public float circleSpeed = 0.5f;

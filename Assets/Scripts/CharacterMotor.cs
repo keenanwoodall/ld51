@@ -18,7 +18,7 @@ public abstract class CharacterMotor : MonoBehaviour
     public float squash = 0.06f;
     
     public float CurrentSpeed => rb.velocity.magnitude;
-    public abstract CharacterInput CharacterInput { get; }
+    public abstract CharacterControl CharacterInput { get; }
 
     private Vector3 _previousVelocity;
     private float _cycle;

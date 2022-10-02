@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [DefaultExecutionOrder(-2)]
-public class PlayerInput : CharacterInput
+public class PlayerInput : CharacterControl
 {
     public event Action PickupSword;
     public event Action DropSword;
