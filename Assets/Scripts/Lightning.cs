@@ -103,7 +103,7 @@ public class Lightning : MonoBehaviour
         if (Sword.Instance.transform.GetComponentInParent<Player>() != null)
         {
             Sword.Instance.Drop();
-            Player.Instance.Kill();
+            Player.Instance.Kill("Lightning Strike");
         }
 
         foreach (var rb in hits.Select(h => h.transform.GetComponent<Rigidbody>()))

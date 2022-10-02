@@ -96,6 +96,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
     {
         if (_killRoutine != null)
             return;
+        EnemyManager.Instance.EnemyCount--;
         onKill?.Invoke();
         _killRoutine = StartCoroutine(KillRoutine());
         slingshot.StopAllCoroutines();

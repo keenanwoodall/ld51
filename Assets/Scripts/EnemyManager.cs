@@ -17,23 +17,17 @@ public class EnemyManager : MonoBehaviour
     public Vector2 spawnPerimeter = new Vector2(25f, 25f);
     public Vector2 landPerimeter = new Vector2(15f, 15f);
 
+    public int EnemyCount;
+
     private Vector3[] _spawnPoints;
     private Vector3[] _landPoints;
 
     private void Awake()
     {
+        Instance = this;
         seed.gameObject.SetActive(false);
         _spawnPoints = Enumerable.Repeat<Vector3>(default, 4).ToArray();
         _landPoints = Enumerable.Repeat<Vector3>(default, 4).ToArray();
-    }
-
-    private IEnumerator Start()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(3f + Random.value * 5f);
-            Spawn();
-        }
     }
 
     private void Update()
@@ -47,6 +41,7 @@ public class EnemyManager : MonoBehaviour
 
     public Coroutine Spawn()
     {
+        EnemyCount++;
         return StartCoroutine(SpawnRoutine());
     }
     

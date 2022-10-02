@@ -36,7 +36,7 @@ public class Ball : MonoBehaviour
         
         if (!_friendly && ((1 << collision.gameObject.layer) & LayerMask.GetMask("Player")) > 0)
         {
-            Player.Instance.Kill();
+            Player.Instance.Kill("Sling-Shot");
         }
         
         if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Ball")) > 0)

@@ -18,10 +18,10 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        Player.Killed += () =>
+        Player.Killed += (s) =>
         {
             if (gameOver)
-                gameOver.gameObject.SetActive(true);
+                gameOver.Show(s);
         };
     }
 
@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = Input.GetKey(KeyCode.LeftShift) ? 0.5f : 1f;
 
-        _timer += Time.deltaTime;
+        if (RoundManager.Instance.CurrentRound > 0)
+            _timer += Time.deltaTime;
 
         if (_timer >= 10f)
         {

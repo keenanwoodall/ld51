@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : CharacterMotor
 {
     public static Player Instance;
-    public static Action Killed;
+    public static Action<string>Killed;
     public Transform swordContainer;
     public PlayerInput playerInput;
     public float minThrowAngle = 20f;
@@ -55,12 +55,12 @@ public class Player : CharacterMotor
     }
 
     private bool _killed; 
-    public void Kill()
+    public void Kill(string reason)
     {
         if (_killed || this == null)
             return;
         _killed = true;
-        Killed?.Invoke();
+        Killed?.Invoke(reason);
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         Destroy(this);
     }
