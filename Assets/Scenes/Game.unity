@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.21176472, g: 0.3254902, b: 0.47058827, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.05
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.036489844, g: 0.08721966, b: 0.18867922, a: 1}
@@ -161,7 +161,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-110740
+  m_Name: pb_Mesh52198
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -545,11 +545,6 @@ MonoBehaviour:
   stopResponse: 10
   turnResponse: 10
   rb: {fileID: 156296943}
-  input: {fileID: 156296944}
-  swordContainer: {fileID: 650462037}
-  swordLayer:
-    serializedVersion: 2
-    m_Bits: 2048
   rig: {fileID: 1927520634}
   cycleSpeed: 3.5
   accelerationTilt: 0.5
@@ -557,6 +552,8 @@ MonoBehaviour:
   sway: 2
   bob: 0.05
   squash: 0.06
+  swordContainer: {fileID: 650462037}
+  playerInput: {fileID: 156296944}
 --- !u!54 &156296943
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -582,11 +579,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 156296940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24a1225258648e6459eed43c1e322531, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e6fb2e4e2a948a5855543c41fa72b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Movement: {x: 0, y: 0, z: 0}
-  AimDirection: {x: 0, y: 0, z: 0}
+  LookDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &178375688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,7 +1077,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -6907,6 +6904,8 @@ GameObject:
   m_Component:
   - component: {fileID: 759284042}
   - component: {fileID: 759284041}
+  - component: {fileID: 759284044}
+  - component: {fileID: 759284043}
   m_Layer: 12
   m_Name: Enemy
   m_TagString: Untagged
@@ -6947,6 +6946,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 360, z: 0}
+--- !u!114 &759284043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759284038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7649e184a0641ab8342996f641ecffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Movement: {x: 0, y: 0, z: 0}
+  LookDirection: {x: 0, y: 0, z: 0}
+--- !u!114 &759284044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759284038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd03e30984a4f8442b4174bfb7e495cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  walkResponse: 20
+  stopResponse: 10
+  turnResponse: 10
+  rb: {fileID: 759284041}
+  rig: {fileID: 1293966199}
+  cycleSpeed: 3.5
+  accelerationTilt: 0.5
+  accelerationTiltResponse: 3
+  sway: 2
+  bob: 0.05
+  squash: 0.06
+  enemyInput: {fileID: 759284043}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -7282,7 +7320,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-451214
+  m_Name: pb_Mesh52218
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

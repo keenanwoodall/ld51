@@ -1,12 +1,9 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(-2)]
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : CharacterInput
 {
-    public Vector3 Movement;
-    public Vector3 AimDirection;
-    public bool Walking => Movement.sqrMagnitude > 0f;
     public event Action PickupSword;
     public event Action DropSword;
 
@@ -31,7 +28,7 @@ public class PlayerInput : MonoBehaviour
             var hitPoint = inputRay.GetPoint(distance);
             var playerPosition = player.transform.position;
             playerPosition.y = 0f;
-            AimDirection = (hitPoint - playerPosition).normalized;
+            LookDirection = (hitPoint - playerPosition).normalized;
         }
     }
 }

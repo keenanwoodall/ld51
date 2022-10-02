@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
 [DefaultExecutionOrder(1)]
 public class Sword : MonoBehaviour
@@ -62,13 +60,15 @@ public class Sword : MonoBehaviour
         }
         
         _heldBefore = true;
-        if (_state == SwordState.Held)
+        if (_state == SwordState.Held && holder == transform.parent)
             return;
         
         _state = SwordState.Held;
         
         rb.isKinematic = true;
-        rb.constraints = ~RigidbodyConstraints.FreezeAll;
+        rb.detectCollisions = false;
+        
+        rb.constraints = RigidbodyConstraints.FreezeAll;
         transform.SetParent(holder);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -81,10 +81,11 @@ public class Sword : MonoBehaviour
         
         _state = SwordState.Dropped;
         rb.isKinematic = false;
+        rb.detectCollisions = true;
         
         transform.SetParent(null);
 
-        _throwDirection = Player.Instance.input.AimDirection;
+        _throwDirection = Player.Instance.playerInput.LookDirection;
         var throwAngle = Vector3.Angle(Player.Instance.transform.forward, _throwDirection);
         _thrown = throwAngle > minThrowAngle; 
         if (_thrown)
@@ -102,20 +103,39 @@ public class Sword : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (_state == SwordState.Dropped && _thrown && collision.gameObject.layer != LayerMask.NameToLayer("Player"))
+        var enemyLayer = LayerMask.NameToLayer("Enemy");
+        var playerLayer = LayerMask.NameToLayer("Player");
+        if (_state == SwordState.Dropped && _thrown && collision.gameObject.layer != playerLayer)
         {
             rb.isKinematic = true;
+            rb.detectCollisions = false;
+            
             _state = SwordState.Stuck;
 
             foreach (var c in collision.contacts)
             {
                 Debug.DrawRay(c.point, c.normal * 0.1f, Color.magenta, 20f);
             }
-            
-            var contact = collision.contacts[^1];
-            var penetrationDirection = contact.normal;
-            transform.rotation = Quaternion.LookRotation(penetrationDirection, Vector3.up);
-            transform.position = contact.point + contact.normal * (wobbleRoot.position - transform.position).magnitude;
+
+            var contact = collision.GetContact(0);
+            if (collision.gameObject.layer == enemyLayer)
+            {
+                var enemyRB = collision.transform.GetComponentInParent<Rigidbody>();
+                transform.SetParent(enemyRB.transform);
+                var enemyPosition = collision.transform.position;
+                enemyPosition.y = transform.position.y;
+                var normal = (transform.position - enemyPosition).normalized;
+                transform.rotation = Quaternion.LookRotation(normal, Vector3.up);
+                transform.position =
+                    contact.point + normal * (wobbleRoot.position - transform.position).magnitude;
+            }
+            else
+            {
+                transform.rotation =
+                    Quaternion.LookRotation(contact.normal, Vector3.up);
+                transform.position =
+                    contact.point + contact.normal * (wobbleRoot.position - transform.position).magnitude;
+            }
 
             if (_stuckRoutine != null)
                 StopCoroutine(_stuckRoutine);

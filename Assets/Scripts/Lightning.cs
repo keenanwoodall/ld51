@@ -16,7 +16,7 @@ public class Lightning : MonoBehaviour
     public float persistance = 0.5f;
     public float lacunarity = 2f;
     public int octaves = 2;
-    public Light light;
+    public new Light light;
     public AnimationCurve noiseStrength = AnimationCurve.Linear(0f, 1f, 1f, 0f);
 
     public LineRenderer lineRenderer;
