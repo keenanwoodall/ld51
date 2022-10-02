@@ -91,12 +91,12 @@ public class Sword : MonoBehaviour
         var throwAngle = Vector3.Angle(Player.Instance.transform.forward, _throwDirection);
         
         if (throwAngle > minThrowAngle)
-			Throw();
+			Throw(throwAngle);
         else
-			FallToFloor();
+			FallToFloor(throwAngle);
     }
 
-	private void Throw()
+	private void Throw(float throwAngle)
 	{
         var throwSpeed = Mathf.Lerp(minThrowSpeed, maxThrowSpeed, throwAngle / 180f);
         _currentThrowSpeed = throwSpeed;   
@@ -104,7 +104,7 @@ public class Sword : MonoBehaviour
 		_state = SwordState.Airbourne;
 	}
 
-	private void FallToFloor()
+	private void FallToFloor(float throwAngle)
 	{
         rb.constraints = RigidbodyConstraints.None;
         rb.AddForceAtPosition(_throwDirection * (maxDropForce * throwSensitivityCurve.Evaluate(throwAngle / minThrowAngle)), wobbleRoot.position);
