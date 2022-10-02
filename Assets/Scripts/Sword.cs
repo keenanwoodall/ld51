@@ -24,7 +24,7 @@ public class Sword : MonoBehaviour
 		Idle,
 		Holding,
         Retrieving,
-		Airbourne,
+		Throwing,
 		Stuck,
 	}
 
@@ -41,7 +41,7 @@ public class Sword : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (State == SwordState.Airbourne)
+        if (State == SwordState.Throwing)
         {
             transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
             transform.position += _throwDirection * (_currentThrowSpeed * Time.fixedDeltaTime);
@@ -81,9 +81,12 @@ public class Sword : MonoBehaviour
         float returnTime = 0f;
         while (Vector3.Distance(transform.position, holder.position) > 1f)
         {
+            if (State is not SwordState.Retrieving)
+                yield break;
             returnTime += Time.fixedDeltaTime;
             transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
             transform.position = Vector3.MoveTowards(transform.position, holder.position, Mathf.Clamp01(returnTime) * maxThrowSpeed * Time.fixedDeltaTime);
+            rb.position = transform.position;
             yield return new WaitForFixedUpdate();
         }
         
@@ -96,7 +99,7 @@ public class Sword : MonoBehaviour
     
     public void Drop()
     {
-        if (State is SwordState.Airbourne or SwordState.Retrieving)
+        if (State is SwordState.Throwing or SwordState.Retrieving)
             return;
 
         rb.isKinematic = false;
@@ -131,50 +134,54 @@ public class Sword : MonoBehaviour
         var throwSpeed = Mathf.Lerp(minThrowSpeed, maxThrowSpeed, speed);
         _currentThrowSpeed = throwSpeed;   
         rb.constraints = RigidbodyConstraints.FreezeAll;
-		State = SwordState.Airbourne;
+		State = SwordState.Throwing;
 	}
     
     private void OnCollisionEnter(Collision collision)
     {
         var enemyLayer = LayerMask.NameToLayer("Enemy");
         var playerLayer = LayerMask.NameToLayer("Player");
-        if (State == SwordState.Airbourne && collision.gameObject.layer != playerLayer)
+        if (collision.gameObject.layer != playerLayer && State is not SwordState.Stuck)
         {
             rb.isKinematic = true;
-            rb.detectCollisions = false;
-            
-            State = SwordState.Stuck;
-
-            foreach (var c in collision.contacts)
-            {
-                Debug.DrawRay(c.point, c.normal * 0.1f, Color.magenta, 20f);
-            }
 
             var contact = collision.GetContact(0);
 
             if (collision.gameObject.layer == enemyLayer)
             {
-                print("Hit Enemy");
-                var enemyRB = collision.transform.GetComponentInParent<Rigidbody>();
-                transform.SetParent(enemyRB.transform);
-                var enemyPosition = collision.transform.position;
-                enemyPosition.y = transform.position.y;
-                var normal = (transform.position - enemyPosition).normalized;
-                transform.rotation = Quaternion.LookRotation(normal, Vector3.up);
-                transform.position =
-                    contact.point + normal * (wobbleRoot.position - transform.position).magnitude;
+                if (State is SwordState.Throwing)
+                {
+                    rb.detectCollisions = false;
+                    State = SwordState.Stuck;
+                    var enemyRB = collision.transform.GetComponentInParent<Rigidbody>();
+                    transform.SetParent(enemyRB.transform);
+                    var enemyPosition = collision.transform.position;
+                    enemyPosition.y = transform.position.y;
+                    var normal = (transform.position - enemyPosition).normalized;
+                    transform.rotation = Quaternion.LookRotation(normal, Vector3.up);
+                    transform.position =
+                        contact.point + normal * (wobbleRoot.position - transform.position).magnitude;
+                }
+                else if (State is SwordState.Retrieving or SwordState.Holding)
+                {
+                    var enemy = collision.transform.GetComponentInParent<EnemyControl>();
+                    enemy.Kill();
+                    return;
+                }
             }
             else
             {
+                rb.detectCollisions = false;
+                State = SwordState.Stuck;
                 transform.rotation =
                     Quaternion.LookRotation(contact.normal, Vector3.up);
                 transform.position =
                     contact.point + contact.normal * (wobbleRoot.position - transform.position).magnitude;
             }
-            
+
             CurrentSwordTarget = collision.gameObject.GetComponentInParent<ISwordTarget>();
             CurrentSwordTarget?.OnStuck(this);
-
+            
             if (_wiggleRoutine != null)
                 StopCoroutine(_wiggleRoutine);
             _wiggleRoutine = StartCoroutine(WiggleRoutine());

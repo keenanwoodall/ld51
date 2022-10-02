@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -97,12 +96,14 @@ public class EnemyControl : CharacterControl, ISwordTarget
     {
         if (_killRoutine != null)
             return;
+        if (_killed)
+            return;
         _killed = true;
         EnemyManager.Instance.EnemyCount--;
         onKill?.Invoke();
         _killRoutine = StartCoroutine(KillRoutine());
         slingshot.StopAllCoroutines();
-        if (Sword.Instance.CurrentSwordTarget == this)
+        if (Sword.Instance.transform.IsChildOf(transform))
         {
             Sword.Instance.Drop();
         }
@@ -129,7 +130,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
         foreach (var c in GetComponentsInChildren<Collider>())
         {
-            if (!c.transform.IsChildOf(slingshot.transform))
+            if (!c.transform.IsChildOf(slingshot.transform) && !c.transform.IsChildOf(Sword.Instance.transform))
                 Destroy(c);
         }
 
@@ -145,6 +146,11 @@ public class EnemyControl : CharacterControl, ISwordTarget
             bottom.transform.localScale = Vector3.Lerp(bottom.transform.localScale, Vector3.zero, 2f * Time.deltaTime);
         }
 
+        if (Sword.Instance.transform.IsChildOf(transform))
+        {
+            Sword.Instance.Drop();
+        }
+        
         Destroy(top.gameObject);
         Destroy(bottom.gameObject);
         Destroy(gameObject);
