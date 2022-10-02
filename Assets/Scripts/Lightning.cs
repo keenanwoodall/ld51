@@ -51,7 +51,7 @@ public class Lightning : MonoBehaviour
             StopCoroutine(_strikeRoutine);
         return _strikeRoutine = StartCoroutine(StrikeRoutine(target, from));
     }
-    
+
     private IEnumerator StrikeRoutine(Vector3 target, Vector3 from)
     {
         if (_points == null || _points.Length != pointCount)
