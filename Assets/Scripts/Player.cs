@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
 public class Player : CharacterMotor
 {
     public static Player Instance;
-
+    public static Action Killed;
     public Transform swordContainer;
     public PlayerInput playerInput;
     public float minThrowAngle = 20f;
@@ -31,5 +32,12 @@ public class Player : CharacterMotor
     private void OnPickupSwordInput()
     {
         Sword.Instance.Pickup(swordContainer);
+    }
+
+    public void Kill()
+    {
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        Killed?.Invoke();
+        Destroy(this);
     }
 }

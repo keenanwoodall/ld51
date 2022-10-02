@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -34,6 +33,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
         else
         {
             var player = Player.Instance;
+            if (player == null)
+                return;
             if (Vector3.Distance(player.transform.position, transform.position) > pursueDistance)
             {
                 Movement = (player.transform.position - transform.position).normalized;

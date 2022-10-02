@@ -27,7 +27,7 @@ public class Sword : MonoBehaviour
 		Stuck,
 	}
 
-    private SwordState _state = SwordState.Idle;
+    public SwordState State = SwordState.Idle;
 
     public ISwordTarget CurrentSwordTarget;
     private float _currentThrowSpeed;
@@ -40,7 +40,7 @@ public class Sword : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (_state == SwordState.Airbourne)
+        if (State == SwordState.Airbourne)
         {
             transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
             transform.position += _throwDirection * (_currentThrowSpeed * Time.fixedDeltaTime);
@@ -50,24 +50,27 @@ public class Sword : MonoBehaviour
 
     public void Pickup(Transform holder)
     {
-        if (_state == SwordState.Stuck && _stuckRoutine != null)
+        if (State == SwordState.Stuck && _wiggleRoutine != null)
         {
-            StopCoroutine(_stuckRoutine);
+            StopCoroutine(_wiggleRoutine);
         }
 
-        if (_state == SwordState.Holding)
+        if (State is SwordState.Holding or SwordState.Airbourne)
             return;
 
-        _state = SwordState.Holding;
-        
+        StartCoroutine(PickupRoutine(holder));
+    }
+
+    private IEnumerator PickupRoutine(Transform holder)
+    {
+        State = SwordState.Holding;
+        rb.detectCollisions = false;
+
         rb.isKinematic = true;
         
         rb.constraints = RigidbodyConstraints.FreezeAll;
         transform.SetParent(null);
         transform.localScale = Vector3.one;
-        transform.SetParent(holder);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
 
         if (CurrentSwordTarget != null)
         {
@@ -75,11 +78,24 @@ public class Sword : MonoBehaviour
             CurrentSwordTarget = null;
             st.OnRelease(this);
         }
+
+        float returnTime = 0f;
+        while (Vector3.Distance(transform.position, holder.position) > 1f)
+        {
+            returnTime += Time.fixedDeltaTime;
+            transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, holder.position, Mathf.Clamp01(returnTime) * maxThrowSpeed * Time.fixedDeltaTime);
+            yield return new WaitForFixedUpdate();
+        }
+        
+        transform.SetParent(holder);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
     }
     
     public void Drop()
     {
-        if (_state == SwordState.Airbourne)
+        if (State == SwordState.Airbourne)
             return;
 
         rb.isKinematic = false;
@@ -95,7 +111,7 @@ public class Sword : MonoBehaviour
         transform.SetParent(null);
 
         rb.constraints = RigidbodyConstraints.None;
-        _state = SwordState.Idle;
+        State = SwordState.Idle;
     }
 
 	public void Throw(Vector3 direction, float speed)
@@ -113,19 +129,19 @@ public class Sword : MonoBehaviour
         var throwSpeed = Mathf.Lerp(minThrowSpeed, maxThrowSpeed, speed);
         _currentThrowSpeed = throwSpeed;   
         rb.constraints = RigidbodyConstraints.FreezeAll;
-		_state = SwordState.Airbourne;
+		State = SwordState.Airbourne;
 	}
     
     private void OnCollisionEnter(Collision collision)
     {
         var enemyLayer = LayerMask.NameToLayer("Enemy");
         var playerLayer = LayerMask.NameToLayer("Player");
-        if (_state == SwordState.Airbourne && collision.gameObject.layer != playerLayer)
+        if (State == SwordState.Airbourne && collision.gameObject.layer != playerLayer)
         {
             rb.isKinematic = true;
             rb.detectCollisions = false;
             
-            _state = SwordState.Stuck;
+            State = SwordState.Stuck;
 
             foreach (var c in collision.contacts)
             {
@@ -156,21 +172,24 @@ public class Sword : MonoBehaviour
             CurrentSwordTarget = collision.gameObject.GetComponentInParent<ISwordTarget>();
             CurrentSwordTarget?.OnStuck(this);
 
-            if (_stuckRoutine != null)
-                StopCoroutine(_stuckRoutine);
-            _stuckRoutine = StartCoroutine(StuckRoutine());
+            if (_wiggleRoutine != null)
+                StopCoroutine(_wiggleRoutine);
+            _wiggleRoutine = StartCoroutine(WiggleRoutine());
         }
     }
 
-    private Coroutine _stuckRoutine;
-    private IEnumerator StuckRoutine()
+    private Coroutine _wiggleRoutine;
+    private IEnumerator WiggleRoutine(bool inverse = false, float speed = 1f)
     {
         var t = 0f;
         while (!Mathf.Approximately(t, 1f))
         {
-            t = Mathf.Clamp01(t + Time.deltaTime / wobbleDuration);
+            t = Mathf.Clamp01(t + Time.deltaTime / wobbleDuration * speed);
+            var tt = t;
+            if (inverse)
+                tt = 1f - t;
             yield return null;
-            var angle = Mathf.Sin(t * wobbleSpeed) * wobbleCurve.Evaluate(t) * wobbleStrength;
+            var angle = Mathf.Sin(tt * wobbleSpeed) * wobbleCurve.Evaluate(tt) * wobbleStrength;
             wobbleRoot.localRotation = Quaternion.Euler(angle, 0f, 0f);
         }
     }

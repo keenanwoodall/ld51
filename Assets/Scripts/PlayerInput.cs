@@ -12,6 +12,9 @@ public class PlayerInput : CharacterControl
     
     private void Update()
     {
+        if (!player)
+            return;
+        
         var inputPlane = new Plane(Vector3.up, Vector3.zero);
         
         Movement = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));

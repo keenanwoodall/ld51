@@ -93,11 +93,23 @@ public class Lightning : MonoBehaviour
             lineRenderer.colorGradient = _gradient;
         });
 
-        var hits = Physics.SphereCastAll(target, 1f, Vector3.forward, 0f);
+        var hits = Physics.SphereCastAll(target, 1f, Vector3.forward, 0f, ~(1 << LayerMask.NameToLayer("Sword")) & ~0);
         foreach (var enemy in hits.Select(h => h.transform.GetComponent<EnemyControl>()))
         {
             if (enemy)
                 enemy.Kill();
+        }
+
+        if (Sword.Instance.State == Sword.SwordState.Holding)
+        {
+            Sword.Instance.Drop();
+            Player.Instance.Kill();
+        }
+
+        foreach (var rb in hits.Select(h => h.transform.GetComponent<Rigidbody>()))
+        {
+            if (rb && !rb.isKinematic)
+                rb.AddExplosionForce(500f, target, 30f, 100);
         }
 
         // flash

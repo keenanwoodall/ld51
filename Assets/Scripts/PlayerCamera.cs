@@ -33,13 +33,18 @@ public class PlayerCamera : MonoBehaviour
 
    private void FixedUpdate()
    {
-      var playerTransform = player.transform;
-      var playerPosition = playerTransform.position;
-      var targetPosition = playerPosition + player.playerInput.LookDirection * lookAhead;
-      targetPosition.y = 0f;
-      transform.position =
-         Vector3.SmoothDamp(transform.position, targetPosition + _initialOffset, ref _positionVelocityRef, followDuration);
-      
+      if (player)
+      {
+         var playerTransform = player.transform;
+         var playerPosition = playerTransform.position;
+         var targetPosition = playerPosition + player.playerInput.LookDirection * lookAhead;
+         targetPosition.y = 0f;
+
+         transform.position =
+            Vector3.SmoothDamp(transform.position, targetPosition + _initialOffset, ref _positionVelocityRef,
+               followDuration);
+      }
+
       UpdateShake();
    }
 
