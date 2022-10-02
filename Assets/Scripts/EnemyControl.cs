@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class EnemyControl : CharacterControl, ISwordTarget
@@ -12,7 +13,12 @@ public class EnemyControl : CharacterControl, ISwordTarget
     
     private Vector3 _knockbackVelocity;
     private bool _stuck;
-    
+
+    private void OnDisable()
+    {
+        Movement = Vector3.zero;
+    }
+
     private void Update()
     {
         if (_stuck)

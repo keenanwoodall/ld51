@@ -40,7 +40,7 @@ public abstract class CharacterMotor : MonoBehaviour
     
     private void UpdateRig()
     {
-        _cycle += Time.deltaTime * cycleSpeed * CurrentSpeed;
+        _cycle += Time.deltaTime * cycleSpeed * CharacterInput.Movement.magnitude;
         
         var acceleration = (rb.velocity - _previousVelocity) / Time.deltaTime;
         var axis = Vector3.Cross(acceleration, Vector3.up);
@@ -61,8 +61,13 @@ public abstract class CharacterMotor : MonoBehaviour
         
         // squash
         var s = Mathf.Sin(_cycle * 2f) * CurrentSpeed / walkSpeed * squash;
-        rig.localScale = new Vector3(1f / (1f + s), 1f + s, 1f / (1f + s));
+        SetSquash(s);
         
         _previousVelocity = rb.velocity;
+    }
+
+    public void SetSquash(float s)
+    {
+        rig.localScale = new Vector3(1f / (1f + s), 1f + s, 1f / (1f + s));
     }
 }
