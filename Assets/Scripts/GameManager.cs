@@ -8,19 +8,20 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public CanvasGroup fade;
-    public GameObject dead;
+    public GameOver gameOver;
+
+    public int Score;
     
     protected float _timer;
 
     private void Awake()
     {
         Instance = this;
-        dead.SetActive(false);
 
         Player.Killed += () =>
         {
-            if (dead)
-                dead.SetActive(true);
+            if (gameOver)
+                gameOver.gameObject.SetActive(true);
         };
     }
 

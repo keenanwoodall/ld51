@@ -103,6 +103,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
         {
             Sword.Instance.Drop();
         }
+
+        GameManager.Instance.Score += 1;
     }
 
     private IEnumerator KillRoutine()

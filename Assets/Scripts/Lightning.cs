@@ -93,7 +93,7 @@ public class Lightning : MonoBehaviour
             lineRenderer.colorGradient = _gradient;
         });
 
-        var hits = Physics.SphereCastAll(target, 1f, Vector3.forward, 0f, ~(1 << LayerMask.NameToLayer("Sword")) & ~0);
+        var hits = Physics.SphereCastAll(target, 3f, Vector3.forward, 0f, ~(1 << LayerMask.NameToLayer("Sword")) & ~0);
         foreach (var enemy in hits.Select(h => h.transform.GetComponent<EnemyControl>()))
         {
             if (enemy)
