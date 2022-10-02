@@ -9,7 +9,7 @@ public class TimeChangedEvent : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.TenSecondsPassed += tenSecondsPassed.Invoke;
+        GameManager.Instance.TenSecondsPassed += tenSecondsPassed.Invoke;
     }
 
     private void Update()

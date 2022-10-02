@@ -88,7 +88,6 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
     public void OnRelease(Sword sword)
     {
-        onKill?.Invoke();
         Kill();
     }
 
@@ -97,6 +96,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
     {
         if (_killRoutine != null)
             return;
+        onKill?.Invoke();
         _killRoutine = StartCoroutine(KillRoutine());
         slingshot.StopAllCoroutines();
         if (Sword.Instance.CurrentSwordTarget == this)
@@ -123,7 +123,11 @@ public class EnemyControl : CharacterControl, ISwordTarget
         Destroy(GetComponent<EnemyMotor>());
 
         foreach (var c in GetComponentsInChildren<Collider>())
-            Destroy(c);
+        {
+            if (!c.transform.IsChildOf(slingshot.transform))
+                Destroy(c);
+        }
+
         Destroy(GetComponent<Rigidbody>());
         
         yield return new WaitForSeconds(5f);

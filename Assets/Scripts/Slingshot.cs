@@ -69,7 +69,7 @@ public class Slingshot : MonoBehaviour
                 var newSeed = Instantiate(seed, seed.transform.position, seed.transform.rotation);
                 newSeed.outline.gameObject.SetActive(true);
                 newSeed.rb.isKinematic = false;
-                newSeed.rb.velocity = Vector3.Scale(transform.forward, new Vector3(1f, 0f, 1f)) * 5f;
+                newSeed.rb.velocity = Vector3.Scale(transform.forward, new Vector3(1f, 0f, 1f)) * newSeed.speed;
                 newSeed.collider.enabled = true;
                 seed.transform.localScale = Vector3.zero;
                 

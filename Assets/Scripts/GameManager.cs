@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager _instance;
+    public static GameManager Instance;
 
     public CanvasGroup fade;
     public GameObject dead;
@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        _instance = this;
+        Instance = this;
         dead.SetActive(false);
 
         Player.Killed += () =>
@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        Time.timeScale = Input.GetKey(KeyCode.LeftShift) ? 0.5f : 1f;
+
         _timer += Time.deltaTime;
 
         if (_timer >= 10f)
@@ -53,8 +55,8 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
     }
 
-    public static float CurrentTime => _instance?._timer ?? 0f;
-    public static Action TenSecondsPassed;
+    public static float CurrentTime => Instance?._timer ?? 0f;
+    public Action TenSecondsPassed;
     
     private IEnumerator Tween(float duration, Action<float> onStep)
     {

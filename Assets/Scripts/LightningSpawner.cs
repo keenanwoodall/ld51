@@ -12,7 +12,7 @@ public class LightningSpawner : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        GameManager.TenSecondsPassed += OnTenSecondsPassed;
+        GameManager.Instance.TenSecondsPassed += OnTenSecondsPassed;
     }
 
     private void OnTenSecondsPassed()

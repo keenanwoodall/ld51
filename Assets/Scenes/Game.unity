@@ -5578,7 +5578,7 @@ MonoBehaviour:
   walkSpeed: 5
   walkResponse: 20
   stopResponse: 10
-  turnResponse: 10
+  turnResponse: 15
   rb: {fileID: 156296943}
   rig: {fileID: 1927520634}
   cycleSpeed: 3.5
@@ -11034,6 +11034,8 @@ MonoBehaviour:
   rb: {fileID: 373818316}
   outline: {fileID: 453134441}
   collider: {fileID: 373818313}
+  friendlyColor: {r: 0, g: 0, b: 1, a: 1}
+  speed: 5
 --- !u!1 &377893986
 GameObject:
   m_ObjectHideFlags: 0
