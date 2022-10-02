@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -10,6 +11,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
     public float knockbackRecoverySpeed = 3f;
     public float knockbackForce = 5f;
     public GameObject top, bottom;
+    public Slingshot slingshot;
+    public float shootDelay = 1f;
 
     public UnityEvent onStuck;
     [FormerlySerializedAs("onRelease")]
@@ -17,14 +20,32 @@ public class EnemyControl : CharacterControl, ISwordTarget
     
     private Vector3 _knockbackVelocity;
     private bool _stuck;
+    private float _timeSinceShoot;
+
+    private void Start()
+    {
+        StartCoroutine(ShootRoutine());
+    }
 
     private void OnDisable()
     {
         Movement = Vector3.zero;
     }
 
+    private bool _canShoot;
+    private IEnumerator ShootRoutine()
+    {
+        while (true)
+        {
+            if (_canShoot)
+                yield return slingshot.Shoot();
+            yield return new WaitForSeconds(shootDelay); 
+        }
+    }
+
     private void Update()
     {
+        _canShoot = false;
         if (_stuck)
         {
             Movement = transform.right;
@@ -42,6 +63,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
             }
             else
             {
+                _canShoot = true;
+                
                 Movement = Vector3.Cross((player.transform.position - transform.position).normalized, Vector3.up) *
                            circleSpeed;
                 LookDirection = (player.transform.position - transform.position).normalized;

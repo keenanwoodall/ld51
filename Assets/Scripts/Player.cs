@@ -34,10 +34,14 @@ public class Player : CharacterMotor
         Sword.Instance.Pickup(swordContainer);
     }
 
+    private bool _killed; 
     public void Kill()
     {
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        if (_killed || this == null)
+            return;
+        _killed = true;
         Killed?.Invoke();
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         Destroy(this);
     }
 }

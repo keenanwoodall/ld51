@@ -17,7 +17,11 @@ public class GameManager : MonoBehaviour
         _instance = this;
         dead.SetActive(false);
 
-        Player.Killed += () => dead.SetActive(true);
+        Player.Killed += () =>
+        {
+            if (dead)
+                dead.SetActive(true);
+        };
     }
 
     private IEnumerator Start()
