@@ -66,6 +66,8 @@ public class Sword : MonoBehaviour
         rb.isKinematic = true;
         
         rb.constraints = RigidbodyConstraints.FreezeAll;
+        transform.SetParent(null);
+        transform.localScale = Vector3.one;
         transform.SetParent(holder);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;

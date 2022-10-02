@@ -76,15 +76,24 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
     private IEnumerator KillRoutine()
     {
+        top.transform.SetParent(null);
+        top.GetComponent<Collider>().enabled = true;
+        var trb = top.GetComponent<Rigidbody>();
+        trb.isKinematic = false;
+
+        bottom.transform.SetParent(null);
+        bottom.GetComponent<Collider>().enabled = true;
+        var brb = bottom.GetComponent<Rigidbody>();
+        brb.isKinematic = false;
+        yield return null;
+        trb.AddExplosionForce(300f, transform.position + Vector3.back, 10f, 50f);
+        brb.AddExplosionForce(300f, transform.position + Vector3.back, 10f, 50f);
+
         Destroy(GetComponent<EnemyMotor>());
 
-        top.transform.SetParent(null);
-        top.GetComponent<Rigidbody>().isKinematic = false;
-        top.GetComponent<Collider>().enabled = true;
-        
-        bottom.transform.SetParent(null);
-        bottom.GetComponent<Rigidbody>().isKinematic = false;
-        bottom.GetComponent<Collider>().enabled = true;
+        foreach (var c in GetComponentsInChildren<Collider>())
+            Destroy(c);
+        Destroy(GetComponent<Rigidbody>());
         
         yield return new WaitForSeconds(5f);
 
