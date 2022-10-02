@@ -22,17 +22,15 @@ public class Sword : MonoBehaviour
     public Rigidbody rb;
     public Transform rotateAround;
 
-    public enum SwordState
-    {
-        Held,
-        Stuck, 
-        Dropped,
-    }
+	public enum SwordState
+	{
+		Idle,
+		Holding,
+		Airbourne,
+		Stuck,
+	}
 
-    private bool _thrown;
-    
-    private SwordState _state = SwordState.Stuck;
-    private bool _heldBefore;
+    private SwordState _state = SwordState.Idle;
 
     private ISwordTarget _currentSwordTarget;
     private float _currentThrowSpeed;
@@ -45,7 +43,7 @@ public class Sword : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (_heldBefore && _state == SwordState.Dropped && _thrown)
+        if (_state == SwordState.Airbourne)
         {
             transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
             transform.position += _throwDirection * (_currentThrowSpeed * Time.fixedDeltaTime);
@@ -60,11 +58,10 @@ public class Sword : MonoBehaviour
             StopCoroutine(_stuckRoutine);
         }
 
-        _heldBefore = true;
-        if (_state == SwordState.Held)
+        if (_state == SwordState.Holding)
             return;
 
-        _state = SwordState.Held;
+        _state = SwordState.Holding;
         
         rb.isKinematic = true;
         
@@ -82,10 +79,9 @@ public class Sword : MonoBehaviour
     
     public void Drop()
     {
-        if (_state != SwordState.Held)
+        if (_state != SwordState.Holding)
             return;
         
-        _state = SwordState.Dropped;
         rb.isKinematic = false;
         rb.detectCollisions = true;
         
@@ -93,25 +89,33 @@ public class Sword : MonoBehaviour
 
         _throwDirection = Player.Instance.playerInput.LookDirection;
         var throwAngle = Vector3.Angle(Player.Instance.transform.forward, _throwDirection);
-        _thrown = throwAngle > minThrowAngle; 
-        if (_thrown)
-        {
-            var throwSpeed = Mathf.Lerp(minThrowSpeed, maxThrowSpeed, throwAngle / 180f);
-            _currentThrowSpeed = throwSpeed;   
-            rb.constraints = RigidbodyConstraints.FreezeAll;
-        }
+        
+        if (throwAngle > minThrowAngle)
+			Throw();
         else
-        {
-            rb.constraints = RigidbodyConstraints.None;
-            rb.AddForceAtPosition(_throwDirection * (maxDropForce * throwSensitivityCurve.Evaluate(throwAngle / minThrowAngle)), wobbleRoot.position);
-        }
+			FallToFloor();
     }
+
+	private void Throw()
+	{
+        var throwSpeed = Mathf.Lerp(minThrowSpeed, maxThrowSpeed, throwAngle / 180f);
+        _currentThrowSpeed = throwSpeed;   
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+		_state = SwordState.Airbourne;
+	}
+
+	private void FallToFloor()
+	{
+        rb.constraints = RigidbodyConstraints.None;
+        rb.AddForceAtPosition(_throwDirection * (maxDropForce * throwSensitivityCurve.Evaluate(throwAngle / minThrowAngle)), wobbleRoot.position);
+		_state = SwordState.Idle;
+	}
 
     private void OnCollisionEnter(Collision collision)
     {
         var enemyLayer = LayerMask.NameToLayer("Enemy");
         var playerLayer = LayerMask.NameToLayer("Player");
-        if (_state == SwordState.Dropped && _thrown && collision.gameObject.layer != playerLayer)
+        if (_state == SwordState.Airbourne && collision.gameObject.layer != playerLayer)
         {
             rb.isKinematic = true;
             rb.detectCollisions = false;
