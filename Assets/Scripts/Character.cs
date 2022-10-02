@@ -32,7 +32,7 @@ public abstract class Character : MonoBehaviour
         rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, turnResponse * Time.fixedDeltaTime));
 
         var targetVelocity = CharacterInput.Movement * walkSpeed;
-        var response = CharacterInput.Walking ? walkResponse : stopResponse;
+        var response = targetVelocity.magnitude >= CurrentSpeed ? walkResponse : stopResponse;
         rb.velocity = Vector3.Lerp(rb.velocity, targetVelocity, response * Time.fixedDeltaTime);
         
         UpdateRig();

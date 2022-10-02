@@ -6960,6 +6960,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Movement: {x: 0, y: 0, z: 0}
   LookDirection: {x: 0, y: 0, z: 0}
+  pursueDistance: 4
+  circleSpeed: 0.5
 --- !u!114 &759284044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6972,18 +6974,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd03e30984a4f8442b4174bfb7e495cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  walkResponse: 20
-  stopResponse: 10
-  turnResponse: 10
+  walkSpeed: 4
+  walkResponse: 7
+  stopResponse: 3
+  turnResponse: 4
   rb: {fileID: 759284041}
   rig: {fileID: 1293966199}
   cycleSpeed: 3.5
   accelerationTilt: 0.5
   accelerationTiltResponse: 3
-  sway: 2
-  bob: 0.05
-  squash: 0.06
+  sway: 3
+  bob: 0.1
+  squash: 0.2
   enemyInput: {fileID: 759284043}
 --- !u!1 &832575517
 GameObject:
