@@ -1,0 +1,17 @@
+{
+    "name": "MPO.Editor",
+    "references": [
+        "GUID:bf657ba5f300529478c16779b499932e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
