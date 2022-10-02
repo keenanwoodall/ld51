@@ -20,11 +20,11 @@ public class RoundManager : MonoBehaviour
         {
             yield return null;
         }
-
+        
         while (true)
         {
-            RoundChanged?.Invoke(CurrentRound++);
-            for (int i = 0; i < CurrentRound; i++)
+            RoundChanged?.Invoke(++CurrentRound);
+            for (int i = 0; i < Mathf.Max((CurrentRound - 1) * 2, 1); i++)
             {
                 yield return new WaitForSeconds(Random.value);
                 EnemyManager.Instance.Spawn();

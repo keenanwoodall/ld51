@@ -23,6 +23,7 @@ public class Sword : MonoBehaviour
 	{
 		Idle,
 		Holding,
+        Retrieving,
 		Airbourne,
 		Stuck,
 	}
@@ -55,7 +56,7 @@ public class Sword : MonoBehaviour
             StopCoroutine(_wiggleRoutine);
         }
 
-        if (State is SwordState.Holding)
+        if (State is SwordState.Holding or SwordState.Retrieving)
             return;
 
         StartCoroutine(PickupRoutine(holder));
@@ -63,11 +64,9 @@ public class Sword : MonoBehaviour
 
     private IEnumerator PickupRoutine(Transform holder)
     {
-        State = SwordState.Holding;
+        State = SwordState.Retrieving;
         rb.detectCollisions = true;
-
         rb.isKinematic = true;
-        
         rb.constraints = RigidbodyConstraints.FreezeAll;
         transform.SetParent(null);
         transform.localScale = Vector3.one;
@@ -88,6 +87,8 @@ public class Sword : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         
+        State = SwordState.Holding;
+        
         transform.SetParent(holder);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -95,7 +96,7 @@ public class Sword : MonoBehaviour
     
     public void Drop()
     {
-        if (State == SwordState.Airbourne)
+        if (State is SwordState.Airbourne or SwordState.Retrieving)
             return;
 
         rb.isKinematic = false;
@@ -122,6 +123,7 @@ public class Sword : MonoBehaviour
             CurrentSwordTarget = null;
             st.OnRelease(this);
         }
+        
         transform.SetParent(null);
         rb.isKinematic = false;
         rb.detectCollisions = true;
@@ -152,6 +154,7 @@ public class Sword : MonoBehaviour
 
             if (collision.gameObject.layer == enemyLayer)
             {
+                print("Hit Enemy");
                 var enemyRB = collision.transform.GetComponentInParent<Rigidbody>();
                 transform.SetParent(enemyRB.transform);
                 var enemyPosition = collision.transform.position;

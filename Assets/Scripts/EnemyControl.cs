@@ -17,7 +17,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
     public UnityEvent onStuck;
     [FormerlySerializedAs("onRelease")]
     public UnityEvent onKill;
-    
+
+    private bool _killed;
     private Vector3 _knockbackVelocity;
     private bool _stuck;
     private float _timeSinceShoot;
@@ -37,7 +38,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
     {
         while (true)
         {
-            if (_canShoot)
+            if (_canShoot && !_killed)
                 yield return slingshot.Shoot();
             yield return new WaitForSeconds(shootDelay); 
         }
@@ -96,6 +97,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
     {
         if (_killRoutine != null)
             return;
+        _killed = true;
         EnemyManager.Instance.EnemyCount--;
         onKill?.Invoke();
         _killRoutine = StartCoroutine(KillRoutine());

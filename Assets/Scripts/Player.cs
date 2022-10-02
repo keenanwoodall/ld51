@@ -41,6 +41,9 @@ public class Player : CharacterMotor
 
     private void OnDropSwordInput()
     {
+        if (!Sword.Instance.transform.IsChildOf(transform))
+            return;
+        
         var throwDirection = playerInput.LookDirection;
         var throwAngle = Vector3.Angle(transform.forward, throwDirection);
         if (throwAngle < minThrowAngle && Vector3.Distance(GetMouseWorldPosition(), _lastMouseWorldPosition) < minThrowDistance)
