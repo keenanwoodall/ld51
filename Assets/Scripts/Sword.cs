@@ -55,7 +55,7 @@ public class Sword : MonoBehaviour
             StopCoroutine(_wiggleRoutine);
         }
 
-        if (State is SwordState.Holding or SwordState.Airbourne)
+        if (State is SwordState.Holding)
             return;
 
         StartCoroutine(PickupRoutine(holder));
