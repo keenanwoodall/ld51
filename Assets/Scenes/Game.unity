@@ -7075,6 +7075,21 @@ MonoBehaviour:
   circleSpeed: 0.8
   knockbackRecoverySpeed: 5
   knockbackForce: 3
+  onStuck:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1335211823}
+        m_TargetAssemblyTypeName: Flash, Assembly-CSharp
+        m_MethodName: Do
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &759284044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8964,6 +8979,9 @@ GameObject:
   - component: {fileID: 1335211820}
   - component: {fileID: 1335211819}
   - component: {fileID: 1335211818}
+  - component: {fileID: 1335211822}
+  - component: {fileID: 1335211821}
+  - component: {fileID: 1335211823}
   m_Layer: 12
   m_Name: Body
   m_TagString: Untagged
@@ -9049,6 +9067,50 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1335211816}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1335211821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335211816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 552e4f0165301eb4fb7e9fce816407e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id:
+    name: _BaseColor
+    id: 311
+  value: {r: 1, g: 0.73333335, b: 0.69411767, a: 0}
+--- !u!114 &1335211822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335211816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbd7466ffec9241418eaebc31d2147f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1335211823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335211816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12b79ed4ca63d714288bbaa841d0988b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  a: {r: 1, g: 0.49411768, b: 0.43921572, a: 0}
+  b: {r: 1, g: 0.11792451, b: 0.11792451, a: 0}
+  speed: 5
+  colorProperty: {fileID: 1335211821}
 --- !u!1 &1362838116
 GameObject:
   m_ObjectHideFlags: 0
