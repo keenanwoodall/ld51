@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void Restart()
+    public void Quit()
     {
         fade.blocksRaycasts = true;
         fade.interactable = true;
@@ -55,6 +55,16 @@ public class GameManager : MonoBehaviour
         StartCoroutine(Tween(1f, f => fade.alpha = f));
 
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+    }
+    
+    public void Restart()
+    {
+        fade.blocksRaycasts = true;
+        fade.interactable = true;
+
+        StartCoroutine(Tween(1f, f => fade.alpha = f));
+
+        SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
     }
 
     public static float CurrentTime => Instance?._timer ?? 0f;

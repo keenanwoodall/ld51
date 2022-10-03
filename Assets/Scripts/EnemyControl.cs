@@ -165,7 +165,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
         foreach (var c in GetComponentsInChildren<Collider>())
         {
-            if (!c.transform.IsChildOf(slingshot.transform) && !c.transform.IsChildOf(Sword.Instance.transform))
+            if (!c.transform.IsChildOf(Sword.Instance.transform))
                 Destroy(c);
         }
 

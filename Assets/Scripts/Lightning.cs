@@ -25,27 +25,7 @@ public class Lightning : MonoBehaviour
     private Coroutine _strikeRoutine;
     private Vector3[] _points;
     private Gradient _gradient;
-
-    // private void Update()
-    // {
-    //     if (_points == null || _points.Length != pointCount)
-    //     {
-    //         lineRenderer.positionCount = pointCount;
-    //         _points = new Vector3[pointCount];
-    //     }
-    //
-    //     for (int i = 0; i < pointCount; i++)
-    //     {
-    //         var t = i / (pointCount - 1f);
-    //         var point = Vector3.Lerp(transform.position, Vector3.zero, t);
-    //         point += Noisy.Noise3D(t, frequency, magnitude, persistance, lacunarity, octaves) *
-    //                  noiseStrength.Evaluate(t);
-    //         _points[i] = point;
-    //     }
-    //     
-    //     lineRenderer.SetPositions(_points);
-    // }
-
+    
     public Coroutine Strike(Vector3 target, Vector3 from, int branches)
     {
         if (_strikeRoutine != null)
