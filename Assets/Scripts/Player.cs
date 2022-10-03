@@ -44,7 +44,12 @@ public class Player : CharacterMotor
         if (!Sword.Instance.transform.IsChildOf(transform))
             return;
 
-        Sword.Instance.Throw(playerInput.LookDirection, 1f);
+        var throwDirection = playerInput.LookDirection;
+        var throwAngle = Vector3.Angle(transform.forward, throwDirection);
+        if (throwAngle < minThrowAngle && Vector3.Distance(GetMouseWorldPosition(), _lastMouseWorldPosition) / Time.deltaTime < minThrowSpeed)
+            Sword.Instance.Drop();
+        else
+            Sword.Instance.Throw(playerInput.LookDirection, Mathf.InverseLerp(minThrowAngle, 180f, throwAngle));
     }
 
     private void OnPickupSwordInput()

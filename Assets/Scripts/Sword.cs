@@ -7,7 +7,7 @@ public class Sword : MonoBehaviour
     public static Sword Instance;
 
     public float maxSpinSpeed = 2160f;
-    public float minThrowSpeed = 3f;
+    public float minThrowSpeed = 20f;
     public float maxThrowSpeed = 30f;
     [Space]
     public Transform wobbleRoot;
