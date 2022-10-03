@@ -1,4 +1,5 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public abstract class CharacterMotor : MonoBehaviour
 {
@@ -16,7 +17,11 @@ public abstract class CharacterMotor : MonoBehaviour
     public float sway = 2f;
     public float bob = 0.05f;
     public float squash = 0.06f;
-    
+
+    public AudioSource footstepSource;
+    public AudioItem[] footsteps;
+    private int _lastFootstep = -1;
+
     public float CurrentSpeed => rb.velocity.magnitude;
     public abstract CharacterControl CharacterInput { get; }
 
@@ -37,7 +42,9 @@ public abstract class CharacterMotor : MonoBehaviour
         
         UpdateRig();
     }
-    
+
+    private bool _playedFootstep = true;
+    private int _playedFootstepIndex = -1;
     private void UpdateRig()
     {
         _cycle += Time.deltaTime * cycleSpeed * CurrentSpeed;
@@ -57,7 +64,30 @@ public abstract class CharacterMotor : MonoBehaviour
         rig.localRotation *= Quaternion.Euler(0f, 0f, Mathf.Sin(_cycle) * sway * CurrentSpeed / walkSpeed);
         
         // bob
-        rig.localPosition = Vector3.up * (Mathf.Max(Mathf.Sin(_cycle * 2f), 0f) * bob * CurrentSpeed) / walkSpeed;
+        var h = Mathf.Sin(_cycle * 2f);
+        if (h < 0f)
+        {
+            if (!_playedFootstep && footsteps.Length > 0)
+            {
+                _playedFootstep = true;
+                var newSoundIndex = _playedFootstepIndex;
+                while (newSoundIndex == _playedFootstepIndex && footsteps.Length > 1)
+                {
+                    newSoundIndex = Random.Range(0, footsteps.Length);
+                }
+                newSoundIndex = Mathf.Max(0, newSoundIndex);
+                var sound = footsteps[newSoundIndex];
+                footstepSource.pitch = 1f + Random.Range(-sound.pitchVariance / 2f, sound.pitchVariance / 2f);
+                footstepSource.PlayOneShot(sound.clip, sound.volume);
+
+                _playedFootstepIndex = newSoundIndex;
+            }
+        }
+        else
+        {
+            _playedFootstep = false;
+        }
+        rig.localPosition = Vector3.up * (Mathf.Max(h, 0f) * bob * CurrentSpeed) / walkSpeed;
         
         // squash
         var s = Mathf.Sin(_cycle * 2f) * CurrentSpeed / walkSpeed * squash;

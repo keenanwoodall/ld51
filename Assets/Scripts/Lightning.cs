@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class Lightning : MonoBehaviour
@@ -72,7 +73,7 @@ public class Lightning : MonoBehaviour
             _gradient.alphaKeys = alphaKeys;
             lineRenderer.colorGradient = _gradient;
         });
-
+        
         var hits = Physics.SphereCastAll(target, 3f, Vector3.forward, 0f, ~(1 << LayerMask.NameToLayer("Sword")) & ~0);
         foreach (var enemy in hits.Select(h => h.transform.GetComponent<EnemyControl>()))
         {
