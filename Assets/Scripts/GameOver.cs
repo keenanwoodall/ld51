@@ -1,10 +1,12 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameOver : MonoBehaviour
 {
     public TMP_Text highscoreText, currentScoreText, causeOfDeathText;
+    public UnityEvent onhighscore;
 
     private void Start()
     {
@@ -19,6 +21,7 @@ public class GameOver : MonoBehaviour
 
         if (currentScore > highscore)
         {
+            onhighscore.Invoke();
             PlayerPrefs.SetInt("highscore", currentScore);
             highscoreText.text = $"<b>{currentScore}</b> (New)";
         }

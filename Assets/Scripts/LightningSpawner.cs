@@ -10,6 +10,7 @@ public class LightningSpawner : MonoBehaviour
     
     public Lightning seed;
     public AudioSource audioSource;
+    public AudioItem[] sounds;
     public float audioOffset = 0.4f;
 
     private void Awake()
@@ -40,8 +41,11 @@ public class LightningSpawner : MonoBehaviour
 
     public Lightning Spawn()
     {
-        audioSource.time = audioOffset;
-        audioSource.Play();
+        if (sounds.Length > 0)
+        {
+            var sound = sounds[Random.Range(0, sounds.Length)];
+            sound.PlayOn(audioSource);
+        }
         LightningSpawned.Invoke();
         return Instantiate(Instance.seed);
     }

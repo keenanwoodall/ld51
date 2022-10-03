@@ -19,6 +19,12 @@ public class EnemyControl : CharacterControl, ISwordTarget
     [FormerlySerializedAs("onRelease")]
     public UnityEvent onKill;
 
+    [Space] 
+    public AudioSource stuckSource;
+    public AudioSource killSource;
+    public AudioItem[] killSounds;
+    public AudioItem[] explodeSounds;
+
     private bool _killed;
     private Vector3 _knockbackVelocity;
     private bool _stuck;
@@ -80,6 +86,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
     public void OnStuck(Sword sword)
     {
+        stuckSource.Play();
         _stuck = true;
         _knockbackVelocity += Vector3.ProjectOnPlane
         (
@@ -87,6 +94,11 @@ public class EnemyControl : CharacterControl, ISwordTarget
             planeNormal: Vector3.up
         ) * knockbackForce;
         onStuck.Invoke();
+        if (explodeSounds.Length > 0)
+        {
+            var sound = explodeSounds[Random.Range(0, explodeSounds.Length)];
+            sound.PlayOn(killSource);
+        }
     }
 
     public void OnRelease(Sword sword)
@@ -128,6 +140,20 @@ public class EnemyControl : CharacterControl, ISwordTarget
                         newGiblet.SetActive(true);
                     }
                 }
+            }
+            
+            if (explodeSounds.Length > 0)
+            {
+                var sound = explodeSounds[Random.Range(0, explodeSounds.Length)];
+                sound.PlayOn(killSource);
+            }
+        }
+        else
+        {
+            if (killSounds.Length > 0)
+            {
+                var sound = killSounds[Random.Range(0, killSounds.Length)];
+                sound.PlayOn(killSource);
             }
         }
         _killRoutine = StartCoroutine(KillRoutine());

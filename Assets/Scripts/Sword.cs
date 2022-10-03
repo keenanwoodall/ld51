@@ -21,6 +21,13 @@ public class Sword : MonoBehaviour
     public GameObject blood;
     public float bloodDuration;
 
+    [Space]
+    public AudioSource stuckSource;
+    public AudioSource pickupSource;
+    public AudioItem[] pickupSounds;
+    public AudioSource spinningSource;
+    public Vector2 spinningPitch = new Vector2(0.8f, 1f);
+
 	public enum SwordState
 	{
 		Idle,
@@ -63,6 +70,8 @@ public class Sword : MonoBehaviour
 
         if (State == SwordState.Throwing)
         {
+            spinningSource.pitch = Mathf.Lerp(spinningPitch.x, spinningPitch.y,
+                Mathf.InverseLerp(minThrowSpeed, maxThrowSpeed, _currentThrowSpeed));
             transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
             transform.position += _throwDirection * (_currentThrowSpeed * Time.fixedDeltaTime);
             rb.position = transform.position;
@@ -100,18 +109,27 @@ public class Sword : MonoBehaviour
             st.OnRelease(this);
         }
 
+        spinningSource.Play();
         float returnTime = 0f;
         while (Vector3.Distance(transform.position, holder.position) > 1f)
         {
             if (State is not SwordState.Retrieving)
                 yield break;
+            spinningSource.pitch = Mathf.Lerp(spinningPitch.x, spinningPitch.y,
+                Mathf.InverseLerp(minThrowSpeed, maxThrowSpeed, Mathf.Clamp01(returnTime)));
             returnTime += Time.fixedDeltaTime;
             transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
             transform.position = Vector3.MoveTowards(transform.position, holder.position, Mathf.Clamp01(returnTime) * maxThrowSpeed * Time.fixedDeltaTime);
             rb.position = transform.position;
             yield return new WaitForFixedUpdate();
         }
+        spinningSource.Stop();
 
+        if (pickupSounds.Length > 0)
+        {
+            var sound = pickupSounds[Random.Range(0, pickupSounds.Length)];
+            sound.PlayOn(pickupSource);
+        }
         State = SwordState.Holding;
         
         transform.SetParent(holder);
@@ -148,6 +166,8 @@ public class Sword : MonoBehaviour
             CurrentSwordTarget = null;
             st.OnRelease(this);
         }
+        
+        spinningSource.Play();
         
         transform.SetParent(null);
         rb.isKinematic = false;
@@ -187,6 +207,7 @@ public class Sword : MonoBehaviour
                     transform.position =
                         enemyPosition + normal * (wobbleRoot.position - transform.position).magnitude;
                     transform.rotation = Quaternion.LookRotation(normal, Vector3.up);
+                    spinningSource.Stop();
                 }
                 else if (State is SwordState.Retrieving or SwordState.Holding)
                 {
@@ -204,6 +225,9 @@ public class Sword : MonoBehaviour
                     Quaternion.LookRotation(contact.normal, Vector3.up);
                 transform.position =
                     contact.point + contact.normal * (wobbleRoot.position - transform.position).magnitude;
+                spinningSource.Stop();
+                stuckSource.Stop();
+                stuckSource.Play();
             }
 
             CurrentSwordTarget = collision.gameObject.GetComponentInParent<ISwordTarget>();
