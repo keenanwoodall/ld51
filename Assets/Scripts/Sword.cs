@@ -169,6 +169,8 @@ public class Sword : MonoBehaviour
 
             var contact = collision.GetContact(0);
 
+            PlayerCamera.Instance.CurrentShakeStrength += 0.3f;
+            
             if (collision.gameObject.layer == enemyLayer)
             {
                 SetBloodActive(true);

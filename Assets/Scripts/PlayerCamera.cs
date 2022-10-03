@@ -16,7 +16,7 @@ public class PlayerCamera : MonoBehaviour
    private Vector3 _initialOffset;
    private Vector3 _positionVelocityRef;
    private float _shakeT;
-   private float _currentShakeStrength;
+   public float CurrentShakeStrength;
    
    private Player player => Player.Instance;
 
@@ -51,16 +51,16 @@ public class PlayerCamera : MonoBehaviour
    private void UpdateShake()
    {
       _shakeT += Time.fixedDeltaTime * shakeSpeed;
-      _currentShakeStrength = Mathf.Lerp(_currentShakeStrength, 0f, shakeDamping * Time.deltaTime);
+      CurrentShakeStrength = Mathf.Lerp(CurrentShakeStrength, 0f, shakeDamping * Time.deltaTime);
 
-      if (_currentShakeStrength > 0.001f)
+      if (CurrentShakeStrength > 0.001f)
       {
-         camera.transform.localPosition = Noisy.Noise3D(_shakeT, 1f, _currentShakeStrength, 0.5f, 2f, 1);
+         camera.transform.localPosition = Noisy.Noise3D(_shakeT, 1f, CurrentShakeStrength, 0.5f, 2f, 1);
       }
    }
    
    private void OnLightningSpawned()
    {
-      _currentShakeStrength += shakeStrength;
+      CurrentShakeStrength += shakeStrength;
    }
 }
