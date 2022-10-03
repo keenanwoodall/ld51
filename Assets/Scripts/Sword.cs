@@ -18,6 +18,8 @@ public class Sword : MonoBehaviour
     [Space]
     public Rigidbody rb;
     public Transform rotateAround;
+    public GameObject blood;
+    public float bloodDuration;
 
 	public enum SwordState
 	{
@@ -34,13 +36,31 @@ public class Sword : MonoBehaviour
     private float _currentThrowSpeed;
     private Vector3 _throwDirection;
 
+    private float lastBloodTime = -100f;
+
     private void Awake()
     {
         Instance = this;
+        SetBloodActive(false);
     }
-    
+
+    public void SetBloodActive(bool active)
+    {
+        foreach (var p in blood.GetComponentsInChildren<ParticleSystem>())
+        {
+            if (active && !p.isPlaying)
+                p.Play();
+            else if (!active && p.isPlaying)
+                p.Stop();
+        }
+    }
     private void FixedUpdate()
     {
+        if (Time.time - lastBloodTime > bloodDuration)
+        {
+            SetBloodActive(false);
+        }
+
         if (State == SwordState.Throwing)
         {
             transform.RotateAround(rotateAround.position, Vector3.up, maxSpinSpeed * Time.fixedDeltaTime);
@@ -151,6 +171,8 @@ public class Sword : MonoBehaviour
 
             if (collision.gameObject.layer == enemyLayer)
             {
+                SetBloodActive(true);
+                lastBloodTime = Time.time;
                 if (State is SwordState.Throwing)
                 {
                     rb.detectCollisions = false;
@@ -168,6 +190,7 @@ public class Sword : MonoBehaviour
                 {
                     var enemy = collision.transform.GetComponentInParent<EnemyControl>();
                     enemy.Kill();
+
                     return;
                 }
             }

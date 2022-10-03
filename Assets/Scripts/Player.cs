@@ -9,7 +9,7 @@ public class Player : CharacterMotor
     public Transform swordContainer;
     public PlayerInput playerInput;
     public float minThrowAngle = 20f;
-    public float minThrowDistance = 1f;
+    public float minThrowSpeed = 1f;
     
     private Vector3 _lastMouseWorldPosition;
 
@@ -46,7 +46,7 @@ public class Player : CharacterMotor
         
         var throwDirection = playerInput.LookDirection;
         var throwAngle = Vector3.Angle(transform.forward, throwDirection);
-        if (throwAngle < minThrowAngle && Vector3.Distance(GetMouseWorldPosition(), _lastMouseWorldPosition) < minThrowDistance)
+        if (throwAngle < minThrowAngle && Vector3.Distance(GetMouseWorldPosition(), _lastMouseWorldPosition) / Time.deltaTime < minThrowSpeed)
             Sword.Instance.Drop();
         else
             Sword.Instance.Throw(playerInput.LookDirection, 1f);

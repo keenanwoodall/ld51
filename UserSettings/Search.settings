@@ -7,13 +7,13 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
-	"last_search.BDE7F5D3" = "bloo"
+	"last_search.BDE7F5D3" = "blo"
 	"OpenInspectorPreview.BDE7F5D3" = "0"
 	"currentGroup.BDE7F5D3" = "all"
 	"last_search.982FBD6D" = ""
 	"OpenInspectorPreview.982FBD6D" = "0"
 	"currentGroup.982FBD6D" = "all"
-	"last_search.DA949528" = "enemycontrol"
+	"last_search.DA949528" = "game"
 	"OpenInspectorPreview.DA949528" = "0"
 	"currentGroup.DA949528" = "all"
 }
@@ -62,6 +62,8 @@ providers = {
 objectSelectors = {
 }
 recentSearches = [
+	"b"
+	"g"
 	"enemycontro"
 	"t"
 	"bl"
