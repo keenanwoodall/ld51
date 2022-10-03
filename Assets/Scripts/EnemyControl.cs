@@ -129,14 +129,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
                     }
                 }
             }
-            
-            Destroy(gameObject);
-
         }
-        else
-        {
-            _killRoutine = StartCoroutine(KillRoutine());
-        }
+        _killRoutine = StartCoroutine(KillRoutine());
         Destroy(slingshot.gameObject);
         if (Sword.Instance.transform.IsChildOf(transform))
         {

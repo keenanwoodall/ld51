@@ -38,7 +38,7 @@ public class Sword : MonoBehaviour
 
     private float lastBloodTime = -100f;
 
-    private void Awake()
+    private void OnEnable()
     {
         Instance = this;
         SetBloodActive(false);
@@ -111,7 +111,7 @@ public class Sword : MonoBehaviour
             rb.position = transform.position;
             yield return new WaitForFixedUpdate();
         }
-        
+
         State = SwordState.Holding;
         
         transform.SetParent(holder);
