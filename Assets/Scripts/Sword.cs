@@ -70,6 +70,8 @@ public class Sword : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeAll;
         transform.SetParent(null);
         transform.localScale = Vector3.one;
+        
+        transform.LookAt(Player.Instance.transform.position);
 
         if (CurrentSwordTarget != null)
         {
