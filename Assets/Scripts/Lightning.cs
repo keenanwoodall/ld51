@@ -97,7 +97,7 @@ public class Lightning : MonoBehaviour
         foreach (var enemy in hits.Select(h => h.transform.GetComponent<EnemyControl>()))
         {
             if (enemy)
-                enemy.Kill();
+                enemy.Kill(true);
         }
 
         if (Sword.Instance.transform.GetComponentInParent<Player>() != null)
@@ -106,10 +106,11 @@ public class Lightning : MonoBehaviour
             Player.Instance.Kill("Lightning Strike");
         }
 
+        hits = Physics.SphereCastAll(target, 3f, Vector3.forward, 0f, ~(1 << LayerMask.NameToLayer("Sword")) & ~0);
         foreach (var rb in hits.Select(h => h.transform.GetComponent<Rigidbody>()))
         {
             if (rb && !rb.isKinematic)
-                rb.AddExplosionForce(500f, target, 30f, 100);
+                rb.AddExplosionForce(500f, target, 30f, 0f);
         }
 
         // flash

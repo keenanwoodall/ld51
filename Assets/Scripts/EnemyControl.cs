@@ -12,6 +12,8 @@ public class EnemyControl : CharacterControl, ISwordTarget
     public GameObject top, bottom;
     public Slingshot slingshot;
     public float shootDelay = 1f;
+    public GameObject gibletSeed;
+    public Transform gibletVolume;
 
     public UnityEvent onStuck;
     [FormerlySerializedAs("onRelease")]
@@ -24,6 +26,7 @@ public class EnemyControl : CharacterControl, ISwordTarget
 
     private void Start()
     {
+        gibletSeed.SetActive(false);
         StartCoroutine(ShootRoutine());
     }
 
@@ -92,17 +95,49 @@ public class EnemyControl : CharacterControl, ISwordTarget
     }
 
     private Coroutine _killRoutine;
-    public void Kill()
+    public void Kill(bool explode = false)
     {
         if (_killRoutine != null)
             return;
         if (_killed)
             return;
+
         _killed = true;
         EnemyManager.Instance.EnemyCount--;
         onKill?.Invoke();
-        _killRoutine = StartCoroutine(KillRoutine());
-        slingshot.StopAllCoroutines();
+
+
+        if (explode)
+        {
+            var bodySize = gibletVolume.localScale;
+            
+            var gibletSize = gibletSeed.transform.GetChild(0).localScale;
+            var numGiblets = new Vector3Int((int)(bodySize.x/gibletSize.x),(int)(bodySize.y/gibletSize.y), (int)(bodySize.z/gibletSize.z));
+            
+            for (int i = 0; i < numGiblets.x; ++i)
+            {
+                for (int j = 0; j < numGiblets.y; ++j)
+                {
+                    for (int k = 0; k < numGiblets.z; ++k)
+                    {
+                        var p = new Vector3((float)i / numGiblets.x, (float)j / numGiblets.y, (float)k / numGiblets.z);
+                        p += Vector3.one * -0.5f;
+                        p = gibletVolume.localToWorldMatrix.MultiplyPoint3x4(p);
+                        
+                        var newGiblet = Instantiate(gibletSeed, p + Vector3.up, gibletVolume.rotation);
+                        newGiblet.SetActive(true);
+                    }
+                }
+            }
+            
+            Destroy(gameObject);
+
+        }
+        else
+        {
+            _killRoutine = StartCoroutine(KillRoutine());
+        }
+        Destroy(slingshot.gameObject);
         if (Sword.Instance.transform.IsChildOf(transform))
         {
             Sword.Instance.Drop();
