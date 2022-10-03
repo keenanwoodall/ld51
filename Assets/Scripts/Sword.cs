@@ -158,9 +158,9 @@ public class Sword : MonoBehaviour
                     var enemyPosition = collision.transform.position;
                     enemyPosition.y = transform.position.y;
                     var normal = (transform.position - enemyPosition).normalized;
-                    transform.rotation = Quaternion.LookRotation(normal, Vector3.up);
                     transform.position =
-                        contact.point + normal * (wobbleRoot.position - transform.position).magnitude;
+                        enemyPosition + normal * (wobbleRoot.position - transform.position).magnitude;
+                    transform.rotation = Quaternion.LookRotation(normal, Vector3.up);
                 }
                 else if (State is SwordState.Retrieving or SwordState.Holding)
                 {

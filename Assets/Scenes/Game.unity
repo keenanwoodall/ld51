@@ -15683,7 +15683,7 @@ GameObject:
   - component: {fileID: 373818313}
   - component: {fileID: 373818317}
   - component: {fileID: 373818316}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16401,7 +16401,7 @@ GameObject:
   - component: {fileID: 435007477}
   - component: {fileID: 435007479}
   - component: {fileID: 435007478}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16603,7 +16603,7 @@ GameObject:
   - component: {fileID: 453134439}
   - component: {fileID: 453134442}
   - component: {fileID: 453134441}
-  m_Layer: 14
+  m_Layer: 15
   m_Name: Outline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21976,7 +21976,7 @@ GameObject:
   m_Component:
   - component: {fileID: 667612607}
   - component: {fileID: 667612608}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Tether
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22205,7 +22205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 729310807}
   - component: {fileID: 729310808}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Tether (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22626,7 +22626,6 @@ Transform:
   m_Children:
   - {fileID: 1293966199}
   - {fileID: 1691046602}
-  - {fileID: 1902164697}
   m_Father: {fileID: 451776631}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 360, z: 0}
@@ -27964,7 +27963,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 882637977}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Pouch Rest
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -28994,7 +28993,7 @@ GameObject:
   - component: {fileID: 1065365724}
   - component: {fileID: 1065365726}
   - component: {fileID: 1065365725}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35556,7 +35555,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1289659108}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35923,6 +35922,7 @@ Transform:
   - {fileID: 377893987}
   - {fileID: 867700893}
   - {fileID: 1564318265}
+  - {fileID: 1902164697}
   m_Father: {fileID: 1293966199}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -45848,7 +45848,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1595859023}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Pouch Pull
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -50903,7 +50903,7 @@ GameObject:
   - component: {fileID: 1651675500}
   - component: {fileID: 1651675502}
   - component: {fileID: 1651675501}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51346,7 +51346,7 @@ GameObject:
   - component: {fileID: 1714279524}
   - component: {fileID: 1714279526}
   - component: {fileID: 1714279525}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56929,7 +56929,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1902164697}
   - component: {fileID: 1902164698}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Slingshot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56943,17 +56943,17 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1902164696}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.194, y: 0.418, z: 0.502}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.36374998, y: -0.54202986, z: 1.2949998}
+  m_LocalScale: {x: 1.8749999, y: 1.8846661, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1289659108}
   - {fileID: 1595859023}
   - {fileID: 882637977}
   - {fileID: 1925173296}
-  m_Father: {fileID: 759284042}
-  m_RootOrder: 2
+  m_Father: {fileID: 1335211817}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1902164698
 MonoBehaviour:
@@ -57273,7 +57273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1925173296}
-  m_Layer: 12
+  m_Layer: 15
   m_Name: Pouch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
